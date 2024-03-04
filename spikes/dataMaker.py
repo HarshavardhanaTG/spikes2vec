@@ -3,7 +3,7 @@ from torch.utils.data import Dataset
 import pickle
 import numpy as np
 from torch.utils.data import DataLoader
-from encoder import computeMaskIndices
+from spikes.encoder import computeMaskIndices
 
 def makeData(fileName):
     path = '/mnt/data/HarshaData/StanfordT12/competitionData/Codes/'

@@ -13,8 +13,7 @@ from spikes.encoder import neuralModel
 from data2vec import Data2Vec
 from utils import AverageMeter, maybeSaveCheckpoint
 
-
-class spikeTrainer:
+class spikeTrainer(object):
     def __init__(self):
         super(spikeTrainer, self).__init__()
     
@@ -34,7 +33,7 @@ class spikeTrainer:
         self.valDataset = torch.tensor(makeData('valDataNorm.pkl'), dtype = torch.float32)
         self.dataCollator = DataCollator()
         self.trainLoader = DataLoader(self.trainDataset, batch_size = 16, collateFn = self.dataCollator)
-        self.valLoader = DataLoader(self.testDataset, batch_size = 16, collate_fn=self.data_collator)
+        self.valLoader = DataLoader(self.valDataset, batch_size = 16, collate_fn = self.dataCollator)
 
         self.tensorboard = SummaryWriter(log_dir = 'spikes/logs')
         self.lossTracker = AverageMeter('loss')
@@ -79,6 +78,7 @@ class spikeTrainer:
     def evaluate(self):
         
         self.model.eval()
+        self.lossTracker.reset()
         with tqdm(self.valLoader, unit = "batch", desc = f'Evaluating... ',
                   bar_format = '{desc:<16}{percentage:3.0f}%|{bar:70}{r_bar}', ascii = " #") as iterator:
             with torch.no_grad():
