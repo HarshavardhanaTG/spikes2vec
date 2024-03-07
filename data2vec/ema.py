@@ -13,7 +13,7 @@ class EMA:
         self.device = 'cuda'
         self.model.to(self.device)
         self.skipKeys = skipKeys or set()
-        self.decay = 0.9998
+        self.decay = 0.9990
         self.numUpdates = 0
 
     @staticmethod

@@ -32,7 +32,7 @@ class spikeTrainer(object):
         self.trainDataset = torch.tensor(makeData('trainDataNorm.pkl'), dtype = torch.float32)
         self.valDataset = torch.tensor(makeData('valDataNorm.pkl'), dtype = torch.float32)
         self.dataCollator = DataCollator()
-        self.trainLoader = DataLoader(self.trainDataset, batch_size = 16, collateFn = self.dataCollator)
+        self.trainLoader = DataLoader(self.trainDataset, batch_size = 16, collate_fn = self.dataCollator)
         self.valLoader = DataLoader(self.valDataset, batch_size = 16, collate_fn = self.dataCollator)
 
         self.tensorboard = SummaryWriter(log_dir = 'spikes/logs')
@@ -44,7 +44,8 @@ class spikeTrainer(object):
         src, mask = batch
         src, mask = src.to(self.device), mask.to(self.device)
         x, y = self.model(src, src, mask)
-        loss = self.criterion(x.float(), y.float()).sum(dim=-1).div(x.size(0))
+        loss = self.criterion(x.float(), y.float()).sum(dim = -1).div(x.size(0))
+        loss = sum(loss)
         loss.backward()
         self.optimizer.step()
         self.optimizer.zero_grad()
@@ -56,14 +57,15 @@ class spikeTrainer(object):
         src, mask = batch
         src, mask = src.to(self.device), mask.to(self.device)
         x, y = self.model(src, src, mask = mask)
-        loss = self.criterion(x.float(), y.float()).sum(dim=-1).div(x.size(0))
+        loss = self.criterion(x.float(), y.float()).sum(dim = -1).div(x.size(0))
+        loss = sum(loss)
 
         return loss.item()
 
     def trainEpoch(self, epochNum):
         
         self.model.train()
-        self.lossLracker.reset()
+        self.lossTracker.reset()
         with tqdm(self.trainLoader, unit = "batch", desc = f'Epoch: {epochNum}/{self.numEpochs} ',
                   bar_format = '{desc:<16}{percentage:3.0f}%|{bar:70}{r_bar}', ascii = " #") as iterator:
             for batch in iterator:

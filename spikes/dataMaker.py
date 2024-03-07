@@ -30,14 +30,13 @@ class DataCollator:
     def __init__(self):
         self.timeLength = 150
         self.channels = 128
-        self.batchsize = 64
 
     def __call__(self, features):
-
         featuresStacked = torch.stack(features, dim = 0)
+        batchSize = featuresStacked.shape[0]
 
         maskTimeIndices = computeMaskIndices(
-            shape = (self.batchsize, self.timeLength),
+            shape = (batchSize, self.timeLength),
             maskProb = 0.65,
             maskLength = 10,
             paddingMask = None,
