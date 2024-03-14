@@ -33,7 +33,7 @@ def maybeSaveCheckpoint(model, optimizer, path, epochNum, saveFreq):
     path = os.path.join(path, f'{epochNum}.pt')
     if epochNum % saveFreq == 0:
         checkpoint = {'data2vec': model.state_dict(),
-                      'encoder': model.encoder.encoder.state_dict(),
+                      'encoder': model.encoder.state_dict(),
                       'optimizer': optimizer.state_dict()}
         torch.save(checkpoint, path)
         print(f'Saved checkpoint to `{path}`')
