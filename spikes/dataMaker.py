@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 from spikes.encoder import computeMaskIndices
 
 def makeData(fileName):
-    path = '/mnt/data/HarshaData/StanfordT12/competitionData/Codes/'
+    path = '/home/htgowda/HarshaWorkspace/data2vec/'
     with open(path + fileName, 'rb') as file:
         trainData = pickle.load(file)
 
